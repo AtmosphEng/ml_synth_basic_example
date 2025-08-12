@@ -95,15 +95,16 @@ void setup()
     delay(1500);
 
     Serial.begin(115200);
+    AAA_DEBUG_SERIAL.begin(115200, SERIAL_8N1, 44, 43); // aaa added t-embed-s3 large grove connector
+
     delay(1500);
 
+    AAA_DEBUG_SERIAL.printf("ml_synth_basic_example  Copyright (C) 2024  Marcel Licence\n");
+    AAA_DEBUG_SERIAL.printf("This program comes with ABSOLUTELY NO WARRANTY;\n");
+    AAA_DEBUG_SERIAL.printf("This is free software, and you are welcome to redistribute it\n");
+    AAA_DEBUG_SERIAL.printf("under certain conditions; \n");
 
-    Serial.printf("ml_synth_basic_example  Copyright (C) 2024  Marcel Licence\n");
-    Serial.printf("This program comes with ABSOLUTELY NO WARRANTY;\n");
-    Serial.printf("This is free software, and you are welcome to redistribute it\n");
-    Serial.printf("under certain conditions; \n");
-
-    Serial.printf("Initialize Synth Module\n");
+    AAA_DEBUG_SERIAL.printf("Initialize Synth Module\n");
     delay(1000);
     Synth_Init();
 
@@ -135,13 +136,13 @@ void setup()
     Delay_Init2(delBuffer1, delBuffer2, MAX_DELAY);
 #endif
 
-    Serial.printf("Initialize Audio Interface\n");
+    AAA_DEBUG_SERIAL.printf("Initialize Audio Interface\n");
 #ifdef ML_BOARD_SETUP
     Board_Setup();
 #else
     Audio_Setup();
 
-    Serial.printf("Initialize Midi Module\n");
+    AAA_DEBUG_SERIAL.printf("Initialize Midi Module\n");
     /*
      * setup midi module / rx port
      */
@@ -151,13 +152,13 @@ void setup()
     Arp_Init(24 * 4); /* slowest tempo one step per bar */
 
 #ifdef ESP32
-    Serial.printf("ESP.getFreeHeap() %d\n", ESP.getFreeHeap());
-    Serial.printf("ESP.getMinFreeHeap() %d\n", ESP.getMinFreeHeap());
-    Serial.printf("ESP.getHeapSize() %d\n", ESP.getHeapSize());
-    Serial.printf("ESP.getMaxAllocHeap() %d\n", ESP.getMaxAllocHeap());
+    AAA_DEBUG_SERIAL.printf("ESP.getFreeHeap() %d\n", ESP.getFreeHeap());
+    AAA_DEBUG_SERIAL.printf("ESP.getMinFreeHeap() %d\n", ESP.getMinFreeHeap());
+    AAA_DEBUG_SERIAL.printf("ESP.getHeapSize() %d\n", ESP.getHeapSize());
+    AAA_DEBUG_SERIAL.printf("ESP.getMaxAllocHeap() %d\n", ESP.getMaxAllocHeap());
 #endif
 
-    Serial.printf("Firmware started successfully\n");
+    AAA_DEBUG_SERIAL.printf("Firmware started successfully\n");
 
 #ifdef MIDI_BLE_ENABLED
     midi_ble_setup();
@@ -314,7 +315,7 @@ void Synth_SetMidiMasterTempo(uint8_t unused __attribute__((unused)), float val)
 
 void Synth_SongPosition(uint16_t pos)
 {
-    Serial.printf("Songpos: %d\n", pos);
+    AAA_DEBUG_SERIAL.printf("Songpos: %d\n", pos);
     if (pos == 0)
     {
         Arp_Reset();
@@ -494,7 +495,7 @@ void ScanI2C(void)
     byte address;
     int nDevices;
 
-    Serial.println("Scanning...");
+    AAA_DEBUG_SERIAL.println("Scanning...");
 
     nDevices = 0;
     for (address = 1; address < 127; address++)
@@ -508,33 +509,33 @@ void ScanI2C(void)
 
         if (r_error == 0)
         {
-            Serial.print("I2C device found at address 0x");
+            AAA_DEBUG_SERIAL.print("I2C device found at address 0x");
             if (address < 16)
             {
-                Serial.print("0");
+                AAA_DEBUG_SERIAL.print("0");
             }
-            Serial.print(address, HEX);
-            Serial.println("  !");
+            AAA_DEBUG_SERIAL.print(address, HEX);
+            AAA_DEBUG_SERIAL.println("  !");
 
             nDevices++;
         }
         else if (r_error == 4)
         {
-            Serial.print("Unknown error at address 0x");
+            AAA_DEBUG_SERIAL.print("Unknown error at address 0x");
             if (address < 16)
             {
-                Serial.print("0");
+                AAA_DEBUG_SERIAL.print("0");
             }
-            Serial.println(address, HEX);
+            AAA_DEBUG_SERIAL.println(address, HEX);
         }
     }
     if (nDevices == 0)
     {
-        Serial.println("No I2C devices found\n");
+        AAA_DEBUG_SERIAL.println("No I2C devices found\n");
     }
     else
     {
-        Serial.println("done\n");
+        AAA_DEBUG_SERIAL.println("done\n");
     }
 }
 #endif
