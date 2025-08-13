@@ -52,7 +52,7 @@
 #endif
 
 
-// aaa #define NOTE_ON_AFTER_SETUP /* used to get a test tone without MIDI input. Can be deactivated */
+//aaa #define NOTE_ON_AFTER_SETUP /* used to get a test tone without MIDI input. Can be deactivated */
 
 //#define USE_ML_SYNTH_PRO
 
@@ -154,41 +154,38 @@ SoftwareSerial Serial2(RXD2, TXD2);
  */
 #include <ml_boards.h> /* requires the ML_Synth library:  https://github.com/marcel-licence/ML_SynthTools */
 
-#ifdef BOARD_ML_V1 // aaa empty
-#elif (defined BOARD_ESP32_AUDIO_KIT_AC101) // aaa empty
-#elif (defined BOARD_ESP32_AUDIO_KIT_ES8388) // aaa empty
-#elif (defined BOARD_ESP32_DOIT) // aaa empty
+#ifdef BOARD_ML_V1
+#elif (defined BOARD_ESP32_AUDIO_KIT_AC101)
+#elif (defined BOARD_ESP32_AUDIO_KIT_ES8388)
+#elif (defined BOARD_ESP32_DOIT)
 
 #define MIDI_PORT2_ACTIVE
-#define MIDI_RX2_PIN RXD2
+//aaa #define MIDI_RX2_PIN RXD2
 
 /* you can activate the following lines to get an additional MIDI input */
 // MIDI_PORT1_ACTIVE
 // #define MIDI_RX1_PIN 13
 #endif
 
-#if (defined BOARD_LILYGO_T_EMBED_S3) // aaa added
+#ifdef BOARD_LILYGO_T_EMBED_S3 // aaa added
+
+#define MIDI_RX2_PIN 43 // aaa Serial2
 
 //#define BLINK_LED_PIN LED_BUILTIN /* PA6 */
 //#define LED_PIN LED_BUILTIN
 #define BLINK_LED_PIN 40 // aaa t-embed-s3 gpio
 #define LED_PIN 40 // aaa t-embed-s3 gpio
 
-//#define I2S_I2SN    SPI2 // only SPI2 and SPI3 supports I2S aaa added
-
-//#define I2S_MCLK_PIN    15 // I2S2_MCK
-
+//#define I2S_MCLK_PIN    ? // I2S2_MCK
 //#define I2S_SCLK    ? // or PB13 I2S2_CK
-//#define I2S_BCLK_PIN    15 // or PB13 I2S2_CK
-#define I2S_BCLK_PIN    7 //  // aaa from lilygo t-embed(esp32s3) sound.ino example.
-
-//#define I2S_SDIN_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
-//#define I2S_DOUT_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
-#define I2S_DOUT_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
 #define I2S_DIN_PIN   -1 // I2S2_SD or PB14 mcu out -> dac in
 
-//#define I2S_LRCK    5 // I2S2_WS
-#define I2S_WCLK_PIN    5 // I2S2_WS
+#define I2S_BCLK_PIN  7 //  // aaa from lilygo t-embed(esp32s3) sound.ino example, and schematic Sheet 6.
+#define I2S_DOUT_PIN  6 // I2S data out from esp32s3 mcu.
+#define I2S_WCLK_PIN  5 // I2S2_WS I2S_LRCK - multiple naming conventions.
+
+#define MIDI_PORT2_ACTIVE
+#define MIDI_SERIAL2_BAUDRATE   115200 // aaa was 31250 in midi_interface.h
 
 #endif // BOARD_LILYGO_T_EMBED_S3 aaa added
 
@@ -385,15 +382,6 @@ SoftwareSerial Serial2(RXD2, TXD2);
 #ifndef MIDI_BAUDRATE
 #define MIDI_BAUDRATE   31250
 #endif
-
-
-
-
-
-
-
-
-
 
 
 #endif /* CONFIG_H_ */

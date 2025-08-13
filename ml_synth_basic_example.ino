@@ -73,7 +73,6 @@
 #include <ml_inline.h>
 #undef ML_SYNTH_INLINE_DECLARATION
 
-#define AAA_DEBUG_SERIAL Serial2 // aaa added for lilygo t-embed(esp32s3) as Serial does not appear ?
 
 char shortName[] = "ML_BasicSynth";
 
@@ -100,19 +99,19 @@ void setup()
 
     delay(1500);
 
-    AAA_DEBUG_SERIAL.printf("ml_synth_basic_example  Copyright (C) 2024  Marcel Licence\n");
-    AAA_DEBUG_SERIAL.printf("This program comes with ABSOLUTELY NO WARRANTY;\n");
-    AAA_DEBUG_SERIAL.printf("This is free software, and you are welcome to redistribute it\n");
-    AAA_DEBUG_SERIAL.printf("under certain conditions; \n");
+    Serial.printf("ml_synth_basic_example  Copyright (C) 2024  Marcel Licence\n");
+    Serial.printf("This program comes with ABSOLUTELY NO WARRANTY;\n");
+    Serial.printf("This is free software, and you are welcome to redistribute it\n");
+    Serial.printf("under certain conditions; \n");
 
-    AAA_DEBUG_SERIAL.printf("Initialize Synth Module\n");
+    Serial.printf("Initialize Synth Module\n");
 
 #if(1) // aaa REQUIRED for i2s good sound tone test via NOTE_ON_AFTER_SETUP
 	pinMode(46, OUTPUT);
 	digitalWrite(46, HIGH);
-	AAA_DEBUG_SERIAL.printf("set pin 46 HIGH for t-embed power on and lcd backlight? \n");
+	Serial.printf("set pin 46 HIGH for t-embed power on and lcd backlight? \n");
 
-	AAA_DEBUG_SERIAL.printf("lilygo-t-embed(esp32-s3) enabled in config.h via hash define \n");
+	Serial.printf("lilygo-t-embed(esp32-s3) enabled in config.h via hash define \n");
 #endif
 
     delay(1000);
@@ -146,13 +145,13 @@ void setup()
     Delay_Init2(delBuffer1, delBuffer2, MAX_DELAY);
 #endif
 
-    AAA_DEBUG_SERIAL.printf("Initialize Audio Interface\n");
+    Serial.printf("Initialize Audio Interface\n");
 #ifdef ML_BOARD_SETUP
     Board_Setup();
 #else
     Audio_Setup();
 
-    AAA_DEBUG_SERIAL.printf("Initialize Midi Module\n");
+    Serial.printf("Initialize Midi Module\n");
     /*
      * setup midi module / rx port
      */
@@ -162,13 +161,13 @@ void setup()
     Arp_Init(24 * 4); /* slowest tempo one step per bar */
 
 #ifdef ESP32
-    AAA_DEBUG_SERIAL.printf("ESP.getFreeHeap() %d\n", ESP.getFreeHeap());
-    AAA_DEBUG_SERIAL.printf("ESP.getMinFreeHeap() %d\n", ESP.getMinFreeHeap());
-    AAA_DEBUG_SERIAL.printf("ESP.getHeapSize() %d\n", ESP.getHeapSize());
-    AAA_DEBUG_SERIAL.printf("ESP.getMaxAllocHeap() %d\n", ESP.getMaxAllocHeap());
+    Serial.printf("ESP.getFreeHeap() %d\n", ESP.getFreeHeap());
+    Serial.printf("ESP.getMinFreeHeap() %d\n", ESP.getMinFreeHeap());
+    Serial.printf("ESP.getHeapSize() %d\n", ESP.getHeapSize());
+    Serial.printf("ESP.getMaxAllocHeap() %d\n", ESP.getMaxAllocHeap());
 #endif
 
-    AAA_DEBUG_SERIAL.printf("Firmware started successfully\n");
+    Serial.printf("Firmware started successfully\n");
 
 #ifdef MIDI_BLE_ENABLED
     midi_ble_setup();
@@ -326,7 +325,7 @@ void Synth_SetMidiMasterTempo(uint8_t unused __attribute__((unused)), float val)
 
 void Synth_SongPosition(uint16_t pos)
 {
-    AAA_DEBUG_SERIAL.printf("Songpos: %d\n", pos);
+    Serial.printf("Songpos: %d\n", pos);
     if (pos == 0)
     {
         Arp_Reset();
@@ -506,7 +505,7 @@ void ScanI2C(void)
     byte address;
     int nDevices;
 
-    AAA_DEBUG_SERIAL.println("Scanning...");
+    Serial.println("Scanning...");
 
     nDevices = 0;
     for (address = 1; address < 127; address++)
@@ -520,33 +519,33 @@ void ScanI2C(void)
 
         if (r_error == 0)
         {
-            AAA_DEBUG_SERIAL.print("I2C device found at address 0x");
+            Serial.print("I2C device found at address 0x");
             if (address < 16)
             {
-                AAA_DEBUG_SERIAL.print("0");
+                Serial.print("0");
             }
-            AAA_DEBUG_SERIAL.print(address, HEX);
-            AAA_DEBUG_SERIAL.println("  !");
+            Serial.print(address, HEX);
+            Serial.println("  !");
 
             nDevices++;
         }
         else if (r_error == 4)
         {
-            AAA_DEBUG_SERIAL.print("Unknown error at address 0x");
+            Serial.print("Unknown error at address 0x");
             if (address < 16)
             {
-                AAA_DEBUG_SERIAL.print("0");
+                Serial.print("0");
             }
-            AAA_DEBUG_SERIAL.println(address, HEX);
+            Serial.println(address, HEX);
         }
     }
     if (nDevices == 0)
     {
-        AAA_DEBUG_SERIAL.println("No I2C devices found\n");
+        Serial.println("No I2C devices found\n");
     }
     else
     {
-        AAA_DEBUG_SERIAL.println("done\n");
+        Serial.println("done\n");
     }
 }
 #endif
