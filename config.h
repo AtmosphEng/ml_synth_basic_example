@@ -169,8 +169,6 @@ SoftwareSerial Serial2(RXD2, TXD2);
 
 #ifdef BOARD_LILYGO_T_EMBED_S3 // aaa added
 
-#define MIDI_RX2_PIN 43 // aaa Serial2
-
 //#define BLINK_LED_PIN LED_BUILTIN /* PA6 */
 //#define LED_PIN LED_BUILTIN
 #define BLINK_LED_PIN 40 // aaa t-embed-s3 gpio
@@ -184,8 +182,20 @@ SoftwareSerial Serial2(RXD2, TXD2);
 #define I2S_DOUT_PIN  6 // I2S data out from esp32s3 mcu.
 #define I2S_WCLK_PIN  5 // I2S2_WS I2S_LRCK - multiple naming conventions.
 
+#if 1 // aaa added MIDI on Serial - using USB connector on lilygo t-embed(esp32-s3)
+#define MIDI_PORT_ACTIVE
+#define MIDI_RX_PIN 43 // u0
+#define MIDI_SERIAL_BAUDRATE   115200
+#define MIDI_RECV_FROM_SERIAL
+#endif
+
+#if 0 // aaa added MIDI on Serial2
 #define MIDI_PORT2_ACTIVE
-#define MIDI_SERIAL2_BAUDRATE   115200 // aaa was 31250 in midi_interface.h
+#define MIDI_RX2_PIN 43
+#define MIDI_SERIAL2_BAUDRATE   115200 // was 31250 in midi_interface.h
+#endif
+
+// #define MIDI_RX1_PIN 13 // aaa added Serial
 
 #endif // BOARD_LILYGO_T_EMBED_S3 aaa added
 

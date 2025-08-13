@@ -95,7 +95,8 @@ void setup()
     delay(1500);
 
     Serial.begin(115200);
-    Serial2.begin(115200, SERIAL_8N1, 44, 43); // aaa Serial2 added for t-embed-s3 large grove connector
+
+    //aaa Serial2.begin(115200, SERIAL_8N1, 44, 43); // aaa Serial2 added for t-embed-s3 large grove connector
 
     delay(1500);
 
@@ -111,7 +112,7 @@ void setup()
 	digitalWrite(46, HIGH);
 	Serial.printf("set pin 46 HIGH for t-embed power on and lcd backlight? \n");
 
-	Serial.printf("lilygo-t-embed(esp32-s3) enabled in config.h via hash define \n");
+	//aaa Serial.printf("lilygo-t-embed(esp32-s3) enabled in config.h via hash define \n");
 #endif
 
     delay(1000);
