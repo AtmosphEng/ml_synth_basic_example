@@ -73,6 +73,7 @@
 #include <ml_inline.h>
 #undef ML_SYNTH_INLINE_DECLARATION
 
+#define AAA_DEBUG_SERIAL Serial2 // aaa added for lilygo t-embed(esp32s3) as Serial does not appear ?
 
 char shortName[] = "ML_BasicSynth";
 
@@ -95,7 +96,7 @@ void setup()
     delay(1500);
 
     Serial.begin(115200);
-    AAA_DEBUG_SERIAL.begin(115200, SERIAL_8N1, 44, 43); // aaa added t-embed-s3 large grove connector
+    Serial2.begin(115200, SERIAL_8N1, 44, 43); // aaa Serial2 added for t-embed-s3 large grove connector
 
     delay(1500);
 
@@ -105,6 +106,15 @@ void setup()
     AAA_DEBUG_SERIAL.printf("under certain conditions; \n");
 
     AAA_DEBUG_SERIAL.printf("Initialize Synth Module\n");
+
+#if(1) // aaa REQUIRED for i2s good sound tone test via NOTE_ON_AFTER_SETUP
+	pinMode(46, OUTPUT);
+	digitalWrite(46, HIGH);
+	AAA_DEBUG_SERIAL.printf("set pin 46 HIGH for t-embed power on and lcd backlight? \n");
+
+	AAA_DEBUG_SERIAL.printf("lilygo-t-embed(esp32-s3) enabled in config.h via hash define \n");
+#endif
+
     delay(1000);
     Synth_Init();
 
@@ -179,7 +189,8 @@ void setup()
 #error only supported by ESP32 platform
 #endif
 #endif
-}
+
+} // setup aaa
 
 #ifdef ESP32
 /*

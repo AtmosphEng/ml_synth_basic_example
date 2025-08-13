@@ -52,7 +52,7 @@
 #endif
 
 
-#define NOTE_ON_AFTER_SETUP /* used to get a test tone without MIDI input. Can be deactivated */
+// aaa #define NOTE_ON_AFTER_SETUP /* used to get a test tone without MIDI input. Can be deactivated */
 
 //#define USE_ML_SYNTH_PRO
 
@@ -101,7 +101,7 @@
 #ifndef SWAP_SERIAL
 #define RXD2 13 /* U2RRXD, D7 */
 #define TXD2 15 /* U2RRXD, D0 */
-#include <SoftwareAAA_DEBUG_SERIAL.h>
+#include <SoftwareSerial.h>
 SoftwareSerial Serial2(RXD2, TXD2);
 #define MIDI_PORT2_ACTIVE
 #endif
@@ -115,13 +115,12 @@ SoftwareSerial Serial2(RXD2, TXD2);
  * Configuration for
  * Board: "ESP32 Dev Module" or similar
  */
-//#ifdef ESP32
-#if 0 // aaa disable this for now in case ESP32 gets defined as well as CONFIG_IDF_TARGET_ESP32S3 ?
+#ifdef ESP32 // aaa added comment only for searching changes
 
 #define MEMORY_FROM_HEAP
 
-
-#define BOARD_ML_SYNTH_V2
+#define BOARD_LILYGO_T_EMBED_S3 // aaa added
+// aaa remove #define BOARD_ML_SYNTH_V2
 //#define BOARD_ML_V1 /* activate this when using the ML PCB V1 */
 //#define BOARD_ESP32_AUDIO_KIT_AC101 /* activate this when using the ESP32 Audio Kit v2.2 with the AC101 codec */
 //#define BOARD_ESP32_AUDIO_KIT_ES8388 /* activate this when using the ESP32 Audio Kit v2.2 with the ES8388 codec */
@@ -155,10 +154,10 @@ SoftwareSerial Serial2(RXD2, TXD2);
  */
 #include <ml_boards.h> /* requires the ML_Synth library:  https://github.com/marcel-licence/ML_SynthTools */
 
-#ifdef BOARD_ML_V1
-#elif (defined BOARD_ESP32_AUDIO_KIT_AC101)
-#elif (defined BOARD_ESP32_AUDIO_KIT_ES8388)
-#elif (defined BOARD_ESP32_DOIT)
+#ifdef BOARD_ML_V1 // aaa empty
+#elif (defined BOARD_ESP32_AUDIO_KIT_AC101) // aaa empty
+#elif (defined BOARD_ESP32_AUDIO_KIT_ES8388) // aaa empty
+#elif (defined BOARD_ESP32_DOIT) // aaa empty
 
 #define MIDI_PORT2_ACTIVE
 #define MIDI_RX2_PIN RXD2
@@ -167,6 +166,31 @@ SoftwareSerial Serial2(RXD2, TXD2);
 // MIDI_PORT1_ACTIVE
 // #define MIDI_RX1_PIN 13
 #endif
+
+#if (defined BOARD_LILYGO_T_EMBED_S3) // aaa added
+
+//#define BLINK_LED_PIN LED_BUILTIN /* PA6 */
+//#define LED_PIN LED_BUILTIN
+#define BLINK_LED_PIN 40 // aaa t-embed-s3 gpio
+#define LED_PIN 40 // aaa t-embed-s3 gpio
+
+//#define I2S_I2SN    SPI2 // only SPI2 and SPI3 supports I2S aaa added
+
+//#define I2S_MCLK_PIN    15 // I2S2_MCK
+
+//#define I2S_SCLK    ? // or PB13 I2S2_CK
+//#define I2S_BCLK_PIN    15 // or PB13 I2S2_CK
+#define I2S_BCLK_PIN    7 //  // aaa from lilygo t-embed(esp32s3) sound.ino example.
+
+//#define I2S_SDIN_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
+//#define I2S_DOUT_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
+#define I2S_DOUT_PIN   6 // I2S2_SD or PB14 mcu out -> dac in
+#define I2S_DIN_PIN   -1 // I2S2_SD or PB14 mcu out -> dac in
+
+//#define I2S_LRCK    5 // I2S2_WS
+#define I2S_WCLK_PIN    5 // I2S2_WS
+
+#endif // BOARD_LILYGO_T_EMBED_S3 aaa added
 
 #define SAMPLE_RATE 44100
 #define SAMPLE_SIZE_16BIT
@@ -364,96 +388,11 @@ SoftwareSerial Serial2(RXD2, TXD2);
 
 
 
-/*
- * Configuration for
- * Board: aaa "ESP32-S3 Dev Module" or similar
- */
-#ifdef ESP32 // aaa its actually esp32-s3
-//#ifdef CONFIG_IDF_TARGET_ESP32S3 // aaa
-
-#define MEMORY_FROM_HEAP
-
-#define BOARD_LILYGO_T_EMBED_S3 // aaa
-#define BOARD_ML_SYNTH_V2
-
-//#define BOARD_ML_V1 /* activate this when using the ML PCB V1 */
-//#define BOARD_ESP32_AUDIO_KIT_AC101 /* activate this when using the ESP32 Audio Kit v2.2 with the AC101 codec */
-//#define BOARD_ESP32_AUDIO_KIT_ES8388 /* activate this when using the ESP32 Audio Kit v2.2 with the ES8388 codec */
-//#define BOARD_ESP32_DOIT /* activate this when using the DOIT ESP32 DEVKIT V1 board */
-//#define BOARD_TTGO_T9_RGB_LED_WM8978
-//#define BOARD_WEMOS_D1_MINI_ESP32
-//#define BOARD_ADAFRUIT_QT_PY_ESPS2
 
 
-#define REVERB_ENABLED
-
-#define MAX_DELAY   (SAMPLE_RATE/2)
-
-/* use this to display a scope on the oled display */
-//#define OLED_OSC_DISP_ENABLED
-
-/*
- * use MIDI_BLE_ENABLED to activate the MIDI BLE functionality
- * you might turn off the delay and reverb due to the high heap consumption
- * MIDI BLE will be set as SERVER if MIDI_BLE_CLIENT is deactivated
- * Turn on MIDI_BLE_DEBUG_ENABLED to get some debug messages.
- * @see https://youtu.be/awurJEY8X10
- */
-//#define MIDI_BLE_ENABLED
-//#define MIDI_BLE_CLIENT /* configured as client it will start to search for the server to connect to */
-//#define MIDI_BLE_DEBUG_ENABLED
-
-/*
- * include the board configuration
- * there you will find the most hardware depending pin settings
- */
-#include <ml_boards.h> /* requires the ML_Synth library:  https://github.com/marcel-licence/ML_SynthTools */
-
-//#define BLINK_LED_PIN LED_BUILTIN /* PA6 */
-//#define LED_PIN LED_BUILTIN
-#define BLINK_LED_PIN 40 // aaa t-embed-s3 gpio
-#define LED_PIN 40 // aaa t-embed-s3 gpio
-
-#ifdef BOARD_ML_V1
-#elif (defined BOARD_ESP32_AUDIO_KIT_AC101)
-#elif (defined BOARD_ESP32_AUDIO_KIT_ES8388)
-#elif (defined BOARD_ESP32_DOIT)
-
-#define MIDI_PORT2_ACTIVE
-#define MIDI_RX2_PIN RXD2
-
-/* you can activate the following lines to get an additional MIDI input */
-// MIDI_PORT1_ACTIVE
-// #define MIDI_RX1_PIN 13
-#endif
-
-#define SAMPLE_RATE 44100
-#define SAMPLE_SIZE_16BIT
-#define SAMPLE_BUFFER_SIZE  48
-
-/*
- * define your I2S interface here!
- * values are just example values and will not work
- */
-#if(0) // aaa DISABLED, FOR REFERENCE ONLY.
-#define I2S_I2SN    SPI2 // only SPI2 and SPI3 supports I2S aaa added
-#define I2S_MCLK    PC6 // I2S2_MCK
-#define I2S_SCLK    PB10 // or PB13 I2S2_CK
-#define I2S_SDIN    PC2 // I2S2_SD or PB14 mcu out -> dac in
-#define I2S_LRCK    PB12 // I2S2_WS
-#else
-//#define I2S_I2SN    SPI2 // only SPI2 and SPI3 supports I2S aaa added
-#define I2S_MCLK    15 // I2S2_MCK
-#define I2S_SCLK    6 // or PB13 I2S2_CK
-#define I2S_SDIN    46 // I2S2_SD or PB14 mcu out -> dac in
-#define I2S_LRCK    5 // I2S2_WS
-#endif          
-
-#define AAA_DEBUG_SERIAL Serial // aaa added BUT Serial2 is used for MidiPort2
-//#define AAA_DEBUG_SERIAL Serial2 // aaa added BUT Serial2 is used for MidiPort2
 
 
-#endif /* ESP32 */
+
 
 
 
